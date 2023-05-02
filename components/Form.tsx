@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { AiOutlineReload } from 'react-icons/ai';
 import Input from './Input';
 import getInputFormCount from '../helpers/getCountInputs';
 
@@ -49,6 +50,17 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
    const inputFormCount = getInputFormCount(wordForms.word_forms);
 
    useEffect(() => {
+      // Si el servicio no trae palabras hace un reload
+      if (inputFormCount < 1) {
+         router.refresh();
+      }
+
+      setTimeout(() => {
+         if (inputFormCount === inputsOk) {
+            router.refresh();
+         }
+      }, 500);
+
       const inputs = document.querySelectorAll('.bg-green-700');
       let contador = 0;
       inputs.forEach((input) => {
@@ -63,7 +75,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       } else {
          setTextButtonSubmit('Submit');
       }
-   }, [countIntentos, inputFormCount, inputsOk, setTextButtonSubmit]);
+   }, [countIntentos, inputFormCount, inputsOk, router, setTextButtonSubmit]);
 
    const handleSubmit = () => {
       setCountIntentos(countIntentos + 1);
@@ -152,9 +164,29 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
                     w-full
                  '
                >
-                  <h2 className='text-white text-4xl mb-8 font-semibold'>
-                     {randomWord}
-                  </h2>
+                  <h1 className='text-gray-300 text-xl mb-4 font-light'>
+                     Complete the forms of words to:
+                  </h1>
+
+                  <div className='flex justify-between'>
+                     <h2 className='text-white text-4xl mb-8 font-semibold'>
+                        {randomWord}
+                     </h2>
+
+                     <button
+                        onClick={() => router.refresh()}
+                        className='
+                              text-white 
+                              rounded-md 
+                              hover:text-gray-500 
+                              transition
+                              mb-5
+                           '
+                     >
+                        <AiOutlineReload size={33} />
+                     </button>
+                  </div>
+
                   <div className='flex flex-col gap-4'>
                      {wordForms?.word_forms.v.length > 0 && (
                         <>
@@ -166,7 +198,11 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
                               onChange={(ev: any) => setVerb(ev.target.value)}
                               bgColor={verbStateInput}
                            />
-                           {verbResults !== '' && <div>{verbResults}</div>}
+                           {verbResults !== '' && (
+                              <div className='text-sm text-gray-400'>
+                                 {verbResults}
+                              </div>
+                           )}
                         </>
                      )}
 
@@ -180,7 +216,11 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
                               onChange={(ev: any) => setNoun(ev.target.value)}
                               bgColor={nounStateInput}
                            />
-                           {nounResults !== '' && <div>{nounResults}</div>}
+                           {nounResults !== '' && (
+                              <div className='text-sm text-gray-400'>
+                                 {nounResults}
+                              </div>
+                           )}
                         </>
                      )}
 
@@ -197,7 +237,9 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
                               bgColor={adjectiveStateInput}
                            />
                            {adjectiveResults !== '' && (
-                              <div>{adjectiveResults}</div>
+                              <div className='text-sm text-gray-400'>
+                                 {adjectiveResults}
+                              </div>
                            )}
                         </>
                      )}
@@ -212,20 +254,24 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
                               onChange={(ev: any) => setAdverb(ev.target.value)}
                               bgColor={adverbStateInput}
                            />
-                           {adverbResults !== '' && <div>{adverbResults}</div>}
+                           {adverbResults !== '' && (
+                              <div className='text-sm text-gray-400'>
+                                 {adverbResults}
+                              </div>
+                           )}
                         </>
                      )}
                   </div>
                   <button
                      onClick={handleSubmit}
                      className='
-                    bg-red-600 
+                    bg-blue-600 
                       py-3 
                       text-white 
                       rounded-md 
                       w-full 
                       mt-6
-                    hover:bg-red-700 
+                    hover:bg-blue-700 
                       transition
                    '
                   >
