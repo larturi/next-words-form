@@ -86,7 +86,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       }
 
       if (wordForms?.word_forms.v.length > 0) {
-         if (wordForms.word_forms.v.includes(verb)) {
+         if (wordForms.word_forms.v.includes(verb.toLowerCase())) {
             setVerbStateInput('green');
          } else {
             setVerbStateInput('red');
@@ -96,7 +96,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       }
 
       if (wordForms?.word_forms.n.length > 0) {
-         if (wordForms.word_forms.n.includes(noun)) {
+         if (wordForms.word_forms.n.includes(noun.toLowerCase())) {
             setNounStateInput('green');
          } else {
             setNounStateInput('red');
@@ -106,7 +106,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       }
 
       if (wordForms?.word_forms.a.length > 0) {
-         if (wordForms.word_forms.a.includes(adjective)) {
+         if (wordForms.word_forms.a.includes(adjective.toLowerCase())) {
             setAdjectiveStateInput('green');
          } else {
             setAdjectiveStateInput('red');
@@ -116,7 +116,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       }
 
       if (wordForms?.word_forms.r.length > 0) {
-         if (wordForms.word_forms.r.includes(adverb)) {
+         if (wordForms.word_forms.r.includes(adverb.toLowerCase())) {
             setAdverbStateInput('green');
          } else {
             setAdverbStateInput('red');
