@@ -144,8 +144,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
               w-full
               h-full
               lg:bg-opacity-50
-              lg:pt-40
-
+              lg:pt-10
             '
          >
             <div className='flex justify-center'>
