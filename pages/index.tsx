@@ -14,7 +14,7 @@ export async function getServerSideProps() {
    const randomWord = getRandomWord();
 
    const response = await fetch(
-      `https://fastapi-words-forms.onrender.com/random_word_family/${randomWord}`
+      `http://apirest.com.ar:8900/random_word_family/${randomWord}`
    );
 
    const wordForms: WordForm = await response.json();
