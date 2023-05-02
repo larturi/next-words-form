@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Input from './Input';
+import getInputFormCount from '../helpers/getCountInputs';
 
 export interface WordForm {
    word: string;
@@ -21,6 +23,8 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
+   const router = useRouter();
+
    const [verb, setVerb] = useState('');
    const [verbResults, setVerbResults] = useState('');
    const [verbStateInput, setVerbStateInput] = useState('');
@@ -37,10 +41,23 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
    const [adverbResults, setAdverbResults] = useState('');
    const [adverbStateInput, setAdverbStateInput] = useState('');
 
+   const [textButtonSubmit, setTextButtonSubmit] = useState('Submit');
+
+   const [inputsOk, setInputsOk] = useState(0);
+   const inputFormCount = getInputFormCount(wordForms.word_forms);
+
    const handleSubmit = () => {
+      if (textButtonSubmit === 'Next') {
+         setTextButtonSubmit('Submit');
+         router.refresh();
+      }
+
+      setInputsOk(0);
+
       if (wordForms?.word_forms.v.length > 0) {
          if (wordForms.word_forms.v.includes(verb)) {
             setVerbStateInput('green');
+            setInputsOk(inputsOk + 1);
          } else {
             setVerbStateInput('red');
          }
@@ -51,6 +68,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       if (wordForms?.word_forms.n.length > 0) {
          if (wordForms.word_forms.n.includes(noun)) {
             setNounStateInput('green');
+            setInputsOk(inputsOk + 1);
          } else {
             setNounStateInput('red');
          }
@@ -61,6 +79,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       if (wordForms?.word_forms.a.length > 0) {
          if (wordForms.word_forms.a.includes(adjective)) {
             setAdjectiveStateInput('green');
+            setInputsOk(inputsOk + 1);
          } else {
             setAdjectiveStateInput('red');
          }
@@ -71,12 +90,21 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       if (wordForms?.word_forms.r.length > 0) {
          if (wordForms.word_forms.r.includes(adverb)) {
             setAdverbStateInput('green');
+            setInputsOk(inputsOk + 1);
          } else {
             setAdverbStateInput('red');
          }
 
          setAdverbResults(wordForms?.word_forms.r.join(', '));
       }
+
+      if (inputFormCount === inputsOk) {
+         setTextButtonSubmit('Next');
+      } else {
+         setTextButtonSubmit('Submit');
+      }
+
+      console.log(inputsOk);
    };
 
    return (
@@ -194,7 +222,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
                       transition
                    '
                   >
-                     Submit
+                     {textButtonSubmit}
                   </button>
                </div>
             </div>
