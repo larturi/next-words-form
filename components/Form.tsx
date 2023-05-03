@@ -52,15 +52,8 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
    useEffect(() => {
       // Si el servicio no trae palabras hace un reload
       if (inputFormCount < 4) {
-         router.refresh();
+         router.push('/');
       }
-
-      // Autorefresh
-      // setTimeout(() => {
-      //    if (inputFormCount === inputsOk) {
-      //       router.refresh();
-      //    }
-      // }, 500);
 
       const inputs = document.querySelectorAll('.bg-green-700');
       let contador = 0;
@@ -83,7 +76,9 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
 
       if (textButtonSubmit === 'Next') {
          setTextButtonSubmit('Submit');
-         router.refresh();
+         resetForm();
+         router.push('/');
+         return;
       }
 
       if (wordForms?.word_forms.v.length > 0) {
@@ -125,6 +120,26 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
 
          setAdverbResults(wordForms?.word_forms.r.join(', '));
       }
+   };
+
+   const handleRefresh = () => {
+      resetForm();
+      router.push('/');
+   };
+
+   const resetForm = () => {
+      setVerb('');
+      setVerbResults('');
+      setVerbStateInput('');
+      setNoun('');
+      setNounResults('');
+      setNounStateInput('');
+      setAdjective('');
+      setAdjectiveResults('');
+      setAdjectiveStateInput('');
+      setAdverb('');
+      setAdverbResults('');
+      setAdverbStateInput('');
    };
 
    return (
@@ -170,11 +185,11 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
 
                   <div className='flex justify-between'>
                      <h2 className='text-white text-4xl mb-8 font-semibold'>
-                        {randomWord}
+                        {randomWord || '...'}
                      </h2>
 
                      <button
-                        onClick={() => router.refresh()}
+                        onClick={handleRefresh}
                         className='
                               text-white 
                               rounded-md 
