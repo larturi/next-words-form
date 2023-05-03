@@ -51,7 +51,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
 
    useEffect(() => {
       // Si el servicio no trae palabras hace un reload
-      if (inputFormCount < 1) {
+      if (inputFormCount < 4) {
          router.refresh();
       }
 

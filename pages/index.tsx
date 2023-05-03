@@ -1,5 +1,6 @@
 import Form, { WordForm } from '../components/Form';
 import getRandomWord from '../actions/getRandomWord';
+import getWordFamily from '../helpers/getWordFamily';
 
 interface Props {
    randomWord: string;
@@ -11,13 +12,7 @@ const IndexPage = ({ randomWord, wordForms }: Props) => {
 };
 
 export async function getServerSideProps() {
-   const randomWord = getRandomWord();
-
-   const response = await fetch(
-      `http://apirest.com.ar:8900/random_word_family/${randomWord}`
-   );
-
-   const wordForms: WordForm = await response.json();
+   const { randomWord, wordForms } = await getWordFamily();
 
    return {
       props: {
