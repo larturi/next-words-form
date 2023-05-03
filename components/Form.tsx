@@ -55,11 +55,12 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
          router.refresh();
       }
 
-      setTimeout(() => {
-         if (inputFormCount === inputsOk) {
-            router.refresh();
-         }
-      }, 500);
+      // Autorefresh
+      // setTimeout(() => {
+      //    if (inputFormCount === inputsOk) {
+      //       router.refresh();
+      //    }
+      // }, 500);
 
       const inputs = document.querySelectorAll('.bg-green-700');
       let contador = 0;
