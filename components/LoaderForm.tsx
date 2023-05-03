@@ -2,20 +2,20 @@
 
 import { PuffLoader } from 'react-spinners';
 
-const Loader = () => {
+const LoaderForm = () => {
    return (
       <div
          className='
-                h-[100vh]
                 flex 
                 flex-col 
                 justify-center 
                 items-center 
+                
     '
       >
-         <PuffLoader size={100} color='#1C4ED8' />
+         <PuffLoader size={40} color='#1C4ED8' />
       </div>
    );
 };
 
-export default Loader;
+export default LoaderForm;

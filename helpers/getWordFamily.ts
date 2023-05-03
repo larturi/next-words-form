@@ -17,6 +17,10 @@ export default async function getWordFamily() {
          `http://apirest.com.ar:8900/random_word_family/${randomWord}`
       );
 
+      // const response = await fetch(
+      //    `http://127.0.0.1:8000/random_word_family/${randomWord}`
+      // );
+
       wordForms = await response.json();
 
       const countVerbs = wordForms.word_forms.v.length;

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -5,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { AiOutlineReload } from 'react-icons/ai';
 import Input from './Input';
 import getInputFormCount from '../helpers/getCountInputs';
+import getWordFamily from '../helpers/getWordFamily';
+import LoaderForm from './LoaderForm';
 
 export interface WordForm {
    word: string;
@@ -18,12 +21,7 @@ export interface WordForms {
    r: any[];
 }
 
-interface FormProps {
-   randomWord: string;
-   wordForms: WordForm;
-}
-
-const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
+const Form = () => {
    const router = useRouter();
 
    const [verb, setVerb] = useState('');
@@ -47,12 +45,34 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
    const [countIntentos, setCountIntentos] = useState(0);
 
    const [inputsOk, setInputsOk] = useState(0);
-   const inputFormCount = getInputFormCount(wordForms.word_forms);
+
+   const [wordFormsOk, setWordFormsOk] = useState<WordForm>();
+   const [randomWordOk, setRandomWordOk] = useState('');
+
+   async function fetchData() {
+      const { randomWord, wordForms } = await getWordFamily();
+      setRandomWordOk(randomWord);
+      setWordFormsOk(wordForms);
+   }
 
    useEffect(() => {
-      // Si el servicio no trae palabras hace un reload
-      if (inputFormCount < 4) {
-         router.push('/');
+      fetchData();
+   }, []);
+
+   useEffect(() => {
+      if (wordFormsOk) {
+         const inputFormCount = getInputFormCount(wordFormsOk.word_forms);
+
+         // Si el servicio no trae palabras hace un reload
+         if (inputFormCount < 4) {
+            router.push('/');
+         }
+
+         if (inputFormCount === inputsOk) {
+            setTextButtonSubmit('Next');
+         } else {
+            setTextButtonSubmit('Submit');
+         }
       }
 
       const inputs = document.querySelectorAll('.bg-green-700');
@@ -63,13 +83,7 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
          }
       });
       setInputsOk(contador);
-
-      if (inputFormCount === inputsOk) {
-         setTextButtonSubmit('Next');
-      } else {
-         setTextButtonSubmit('Submit');
-      }
-   }, [countIntentos, inputFormCount, inputsOk, router, setTextButtonSubmit]);
+   }, [countIntentos, inputsOk, router, setTextButtonSubmit, wordFormsOk]);
 
    const handleSubmit = () => {
       setCountIntentos(countIntentos + 1);
@@ -81,48 +95,12 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
          return;
       }
 
-      if (wordForms?.word_forms.v.length > 0) {
-         if (wordForms.word_forms.v.includes(verb.toLowerCase())) {
-            setVerbStateInput('green');
-         } else {
-            setVerbStateInput('red');
-         }
-
-         setVerbResults(wordForms?.word_forms.v.join(', '));
-      }
-
-      if (wordForms?.word_forms.n.length > 0) {
-         if (wordForms.word_forms.n.includes(noun.toLowerCase())) {
-            setNounStateInput('green');
-         } else {
-            setNounStateInput('red');
-         }
-
-         setNounResults(wordForms?.word_forms.n.join(', '));
-      }
-
-      if (wordForms?.word_forms.a.length > 0) {
-         if (wordForms.word_forms.a.includes(adjective.toLowerCase())) {
-            setAdjectiveStateInput('green');
-         } else {
-            setAdjectiveStateInput('red');
-         }
-
-         setAdjectiveResults(wordForms?.word_forms.a.join(', '));
-      }
-
-      if (wordForms?.word_forms.r.length > 0) {
-         if (wordForms.word_forms.r.includes(adverb.toLowerCase())) {
-            setAdverbStateInput('green');
-         } else {
-            setAdverbStateInput('red');
-         }
-
-         setAdverbResults(wordForms?.word_forms.r.join(', '));
-      }
+      validationForm();
    };
 
    const handleRefresh = () => {
+      setWordFormsOk(undefined);
+      fetchData();
       resetForm();
       router.push('/');
    };
@@ -140,6 +118,50 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
       setAdverb('');
       setAdverbResults('');
       setAdverbStateInput('');
+   };
+
+   const validationForm = () => {
+      if (wordFormsOk) {
+         if (wordFormsOk?.word_forms.v.length > 0) {
+            if (wordFormsOk.word_forms.v.includes(verb.toLowerCase())) {
+               setVerbStateInput('green');
+            } else {
+               setVerbStateInput('red');
+            }
+
+            setVerbResults(wordFormsOk?.word_forms.v.join(', '));
+         }
+
+         if (wordFormsOk?.word_forms.n.length > 0) {
+            if (wordFormsOk.word_forms.n.includes(noun.toLowerCase())) {
+               setNounStateInput('green');
+            } else {
+               setNounStateInput('red');
+            }
+
+            setNounResults(wordFormsOk?.word_forms.n.join(', '));
+         }
+
+         if (wordFormsOk?.word_forms.a.length > 0) {
+            if (wordFormsOk.word_forms.a.includes(adjective.toLowerCase())) {
+               setAdjectiveStateInput('green');
+            } else {
+               setAdjectiveStateInput('red');
+            }
+
+            setAdjectiveResults(wordFormsOk?.word_forms.a.join(', '));
+         }
+
+         if (wordFormsOk?.word_forms.r.length > 0) {
+            if (wordFormsOk.word_forms.r.includes(adverb.toLowerCase())) {
+               setAdverbStateInput('green');
+            } else {
+               setAdverbStateInput('red');
+            }
+
+            setAdverbResults(wordFormsOk?.word_forms.r.join(', '));
+         }
+      }
    };
 
    return (
@@ -185,98 +207,89 @@ const Form: React.FC<FormProps> = ({ randomWord, wordForms }) => {
 
                   <div className='flex justify-between'>
                      <h2 className='text-white text-4xl mb-8 font-semibold'>
-                        {randomWord || '...'}
+                        {wordFormsOk ? randomWordOk : '...'}
                      </h2>
 
-                     <button
-                        onClick={handleRefresh}
-                        className='
-                              text-white 
-                              rounded-md 
-                              hover:text-gray-500 
-                              transition
-                              mb-5
-                           '
-                     >
-                        <AiOutlineReload size={33} />
-                     </button>
-                  </div>
-
-                  <div className='flex flex-col gap-4'>
-                     {wordForms?.word_forms.v.length > 0 && (
-                        <>
-                           <Input
-                              id='verb'
-                              type='text'
-                              label='Verb'
-                              value={verb}
-                              onChange={(ev: any) => setVerb(ev.target.value)}
-                              bgColor={verbStateInput}
-                           />
-                           {verbResults !== '' && (
-                              <div className='text-sm text-gray-400'>
-                                 {verbResults}
-                              </div>
-                           )}
-                        </>
-                     )}
-
-                     {wordForms?.word_forms.n.length > 0 && (
-                        <>
-                           <Input
-                              id='noun'
-                              type='text'
-                              label='Noun'
-                              value={noun}
-                              onChange={(ev: any) => setNoun(ev.target.value)}
-                              bgColor={nounStateInput}
-                           />
-                           {nounResults !== '' && (
-                              <div className='text-sm text-gray-400'>
-                                 {nounResults}
-                              </div>
-                           )}
-                        </>
-                     )}
-
-                     {wordForms?.word_forms.a.length > 0 && (
-                        <>
-                           <Input
-                              id='adjective'
-                              type='text'
-                              label='Adjective'
-                              value={adjective}
-                              onChange={(ev: any) =>
-                                 setAdjective(ev.target.value)
-                              }
-                              bgColor={adjectiveStateInput}
-                           />
-                           {adjectiveResults !== '' && (
-                              <div className='text-sm text-gray-400'>
-                                 {adjectiveResults}
-                              </div>
-                           )}
-                        </>
-                     )}
-
-                     {wordForms?.word_forms.r.length > 0 && (
-                        <>
-                           <Input
-                              id='adverb'
-                              type='text'
-                              label='Adverb'
-                              value={adverb}
-                              onChange={(ev: any) => setAdverb(ev.target.value)}
-                              bgColor={adverbStateInput}
-                           />
-                           {adverbResults !== '' && (
-                              <div className='text-sm text-gray-400'>
-                                 {adverbResults}
-                              </div>
-                           )}
-                        </>
+                     {wordFormsOk ? (
+                        <button
+                           onClick={handleRefresh}
+                           className='
+                                 text-white 
+                                 rounded-md 
+                                 hover:text-gray-500 
+                                 transition
+                                 mb-5
+                              '
+                        >
+                           <AiOutlineReload size={33} />
+                        </button>
+                     ) : (
+                        <div>
+                           <LoaderForm />
+                        </div>
                      )}
                   </div>
+
+                  <>
+                     <div className='flex flex-col gap-4'>
+                        <Input
+                           id='verb'
+                           type='text'
+                           label='Verb'
+                           value={verb}
+                           onChange={(ev: any) => setVerb(ev.target.value)}
+                           bgColor={verbStateInput}
+                        />
+                        {verbResults !== '' && (
+                           <div className='text-sm text-gray-400'>
+                              {verbResults}
+                           </div>
+                        )}
+
+                        <Input
+                           id='noun'
+                           type='text'
+                           label='Noun'
+                           value={noun}
+                           onChange={(ev: any) => setNoun(ev.target.value)}
+                           bgColor={nounStateInput}
+                        />
+                        {nounResults !== '' && (
+                           <div className='text-sm text-gray-400'>
+                              {nounResults}
+                           </div>
+                        )}
+
+                        <Input
+                           id='adjective'
+                           type='text'
+                           label='Adjective'
+                           value={adjective}
+                           onChange={(ev: any) => setAdjective(ev.target.value)}
+                           bgColor={adjectiveStateInput}
+                        />
+                        {adjectiveResults !== '' && (
+                           <div className='text-sm text-gray-400'>
+                              {adjectiveResults}
+                           </div>
+                        )}
+
+                        <Input
+                           id='adverb'
+                           type='text'
+                           label='Adverb'
+                           value={adverb}
+                           onChange={(ev: any) => setAdverb(ev.target.value)}
+                           bgColor={adverbStateInput}
+                        />
+                        {adverbResults !== '' && (
+                           <div className='text-sm text-gray-400'>
+                              {adverbResults}
+                           </div>
+                        )}
+                     </div>
+                  </>
+
                   <button
                      onClick={handleSubmit}
                      className='
