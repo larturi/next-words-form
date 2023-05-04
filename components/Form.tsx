@@ -60,11 +60,6 @@ const Form = () => {
       if (wordFormsOk) {
          const inputFormCount = getInputFormCount(wordFormsOk.word_forms);
 
-         // Si el servicio no trae palabras hace un reload
-         if (inputFormCount < 4) {
-            router.push('/');
-         }
-
          if (inputFormCount === inputsOk) {
             setTextButtonSubmit('Next');
          } else {
@@ -187,7 +182,7 @@ const Form = () => {
                   bg-black 
                     bg-opacity-70 
                     px-6
-                    py-12
+                    py-8
                     lg:px-12
                     lg:py-12
                     self-center 
@@ -197,9 +192,27 @@ const Form = () => {
                     w-full
                  '
                >
-                  <h1 className='text-gray-300 text-xl mb-4 font-light'>
-                     Complete the forms of words to:
+                  <h1 className='
+                     text-gray-300 
+                     text-2xl 
+                     mb-1 
+                     font-light 
+                     text-center
+                     md:text-left
+                  '>
+                     Complete the forms of the word
                   </h1>
+
+                  <h2 className='
+                     text-gray-500 
+                     text-sm 
+                     mb-4 
+                     font-light
+                     text-center
+                     md:text-left
+                  '>
+                     {`If the word form doesn't exist, leave the input empty`}
+                  </h2>
 
                   <div className='flex justify-between'>
                      <h2 className='text-white text-4xl mb-8 font-semibold'>
