@@ -237,7 +237,7 @@ const Form = () => {
                            bgColor={verbStateInput}
                         />
                         {verbResults !== '' && (
-                           <div className='text-sm text-gray-400'>
+                           <div className='text-sm ml-1 -mt-3 text-gray-300'>
                               {verbResults}
                            </div>
                         )}
@@ -251,7 +251,7 @@ const Form = () => {
                            bgColor={nounStateInput}
                         />
                         {nounResults !== '' && (
-                           <div className='text-sm text-gray-400'>
+                           <div className='text-sm ml-1 -mt-3 text-gray-300'>
                               {nounResults}
                            </div>
                         )}
@@ -265,7 +265,7 @@ const Form = () => {
                            bgColor={adjectiveStateInput}
                         />
                         {adjectiveResults !== '' && (
-                           <div className='text-sm text-gray-400'>
+                           <div className='text-sm ml-1 -mt-3 text-gray-300'>
                               {adjectiveResults}
                            </div>
                         )}
@@ -279,7 +279,7 @@ const Form = () => {
                            bgColor={adverbStateInput}
                         />
                         {adverbResults !== '' && (
-                           <div className='text-sm text-gray-400'>
+                           <div className='text-sm ml-1 -mt-3 text-gray-300'>
                               {adverbResults}
                            </div>
                         )}

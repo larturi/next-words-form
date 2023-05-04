@@ -27,6 +27,16 @@ const Input: React.FC<InputProps> = ({
       }
    };
 
+   const getLabelColor = (): string => {
+      if (bgColor === 'green') {
+         return 'text-gray-100';
+      } else if (bgColor === 'red') {
+         return 'text-gray-100';
+      } else {
+         return 'text-gray-300';
+      }
+   };
+
    return (
       <div className='relative'>
          <input
@@ -42,8 +52,6 @@ const Input: React.FC<InputProps> = ({
                pb-1
                w-full
                text-md
-             text-white
-              
               ${getBgColor()}
                appearance-none
                focus:outline-none
@@ -55,23 +63,23 @@ const Input: React.FC<InputProps> = ({
          />
          <label
             htmlFor={id}
-            className='
-            absolute 
-            text-md
-          text-zinc-400
-            duration-150 
-            transform 
-            -translate-y-3 
-            scale-75 
-            top-4 
-            z-10 
-            origin-[0] 
-            left-6
-            peer-placeholder-shown:scale-100 
-            peer-placeholder-shown:translate-y-0 
-            peer-focus:scale-75
-            peer-focus:-translate-y-3
-        '
+            className={`
+               absolute 
+               text-md
+               ${getLabelColor()}
+               duration-150 
+               transform 
+               -translate-y-3 
+               scale-75 
+               top-4 
+               z-10 
+               origin-[0] 
+               left-6
+               peer-placeholder-shown:scale-100 
+               peer-placeholder-shown:translate-y-0 
+               peer-focus:scale-75
+               peer-focus:-translate-y-3
+            `}
          >
             {label}
          </label>
