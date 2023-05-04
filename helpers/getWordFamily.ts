@@ -16,7 +16,7 @@ export default async function getWordFamily() {
 
       try {
          const response = await fetch(
-            `http://apirest.com.ar:8900/random_word_family/${randomWord}`
+            `https://apirest.com.ar:8900/random_word_family/${randomWord}`
          );
 
          // const response = await fetch(
