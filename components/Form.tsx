@@ -1,11 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AiOutlineReload } from 'react-icons/ai';
 import Input from './Input';
-import getInputFormCount from '../helpers/getCountInputs';
 import getWordFamily from '../helpers/getWordFamily';
 import LoaderForm from './LoaderForm';
 
@@ -20,6 +18,8 @@ export interface WordForms {
    v: string[];
    r: any[];
 }
+
+type WordType = 'v' | 'n' | 'a' | 'r';
 
 const Form = () => {
    const router = useRouter();
@@ -42,9 +42,13 @@ const Form = () => {
 
    const [textButtonSubmit, setTextButtonSubmit] = useState('Submit');
    const [countIntentos, setCountIntentos] = useState(0);
-   const [inputsOk, setInputsOk] = useState(0);
    const [wordFormsOk, setWordFormsOk] = useState<WordForm>();
    const [randomWordOk, setRandomWordOk] = useState('');
+
+   const [isSubmited, setIsSubmited] = useState(false);
+
+   const [countOk, setCountOk] = useState(0);
+   const [countError, setCountError] = useState(0);
 
    async function fetchData() {
       const { randomWord, wordForms } = await getWordFamily();
@@ -57,25 +61,25 @@ const Form = () => {
    }, []);
 
    useEffect(() => {
-      if (wordFormsOk) {
-         const inputFormCount = getInputFormCount(wordFormsOk.word_forms);
+      if (isSubmited) {
+         setTextButtonSubmit('Next');
 
-         if (inputFormCount === inputsOk) {
-            setTextButtonSubmit('Next');
+         const hasError =
+         verbStateInput === 'red' ||
+         nounStateInput === 'red' ||
+         adjectiveStateInput === 'red' ||
+         adverbStateInput === 'red';
+
+         if (hasError) {
+            setCountError(countError + 1);
          } else {
-            setTextButtonSubmit('Submit');
+            setCountOk(countOk + 1);
          }
+      } else {
+         setTextButtonSubmit('Submit');
       }
-
-      const inputs = document.querySelectorAll('.bg-green-700');
-      let contador = 0;
-      inputs.forEach((input) => {
-         if (input.tagName === 'INPUT') {
-            contador++;
-         }
-      });
-      setInputsOk(contador);
-   }, [countIntentos, inputsOk, router, setTextButtonSubmit, wordFormsOk]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [isSubmited]);
 
    const handleSubmit = () => {
       setCountIntentos(countIntentos + 1);
@@ -93,10 +97,10 @@ const Form = () => {
       setWordFormsOk(undefined);
       fetchData();
       resetForm();
-      router.push('/');
    };
 
    const resetForm = () => {
+      setIsSubmited(false);
       setVerb('');
       setVerbResults('');
       setVerbStateInput('');
@@ -112,45 +116,59 @@ const Form = () => {
    };
 
    const validationForm = () => {
+      setIsSubmited(true);
+
       if (wordFormsOk) {
-         if (wordFormsOk?.word_forms.v.length > 0) {
-            if (wordFormsOk.word_forms.v.includes(verb.toLowerCase())) {
-               setVerbStateInput('green');
-            } else {
-               setVerbStateInput('red');
-            }
+         validateInput(
+            'v',
+            verb,
+            setVerbStateInput,
+            setVerbResults,
+            wordFormsOk
+         );
+         validateInput(
+            'n',
+            noun,
+            setNounStateInput,
+            setNounResults,
+            wordFormsOk
+         );
+         validateInput(
+            'a',
+            adjective,
+            setAdjectiveStateInput,
+            setAdjectiveResults,
+            wordFormsOk
+         );
+         validateInput(
+            'r',
+            adverb,
+            setAdverbStateInput,
+            setAdverbResults,
+            wordFormsOk
+         );
+      }
+   };
 
-            setVerbResults(wordFormsOk?.word_forms.v.join(', '));
+   const validateInput = (
+      wordType: WordType,
+      word: string,
+      setWordStateInput: React.Dispatch<React.SetStateAction<string>>,
+      setWordResults: React.Dispatch<React.SetStateAction<string>>,
+      wordFormsOk: WordForm
+   ): void => {
+      if (wordFormsOk?.word_forms[wordType].length > 0) {
+         if (wordFormsOk.word_forms[wordType].includes(word.toLowerCase())) {
+            setWordStateInput('green');
+         } else {
+            setWordStateInput('red');
          }
-
-         if (wordFormsOk?.word_forms.n.length > 0) {
-            if (wordFormsOk.word_forms.n.includes(noun.toLowerCase())) {
-               setNounStateInput('green');
-            } else {
-               setNounStateInput('red');
-            }
-
-            setNounResults(wordFormsOk?.word_forms.n.join(', '));
-         }
-
-         if (wordFormsOk?.word_forms.a.length > 0) {
-            if (wordFormsOk.word_forms.a.includes(adjective.toLowerCase())) {
-               setAdjectiveStateInput('green');
-            } else {
-               setAdjectiveStateInput('red');
-            }
-
-            setAdjectiveResults(wordFormsOk?.word_forms.a.join(', '));
-         }
-
-         if (wordFormsOk?.word_forms.r.length > 0) {
-            if (wordFormsOk.word_forms.r.includes(adverb.toLowerCase())) {
-               setAdverbStateInput('green');
-            } else {
-               setAdverbStateInput('red');
-            }
-
-            setAdverbResults(wordFormsOk?.word_forms.r.join(', '));
+         setWordResults(wordFormsOk.word_forms[wordType].join(', '));
+      } else {
+         if (word.trim() === '') {
+            setWordStateInput('green');
+         } else {
+            setWordStateInput('red');
          }
       }
    };
@@ -192,25 +210,25 @@ const Form = () => {
                     w-full
                  '
                >
-                  <h1 className='
+                  <h1
+                     className='
                      text-gray-300 
                      text-2xl 
                      mb-1 
                      font-light 
-                     text-center
-                     md:text-left
-                  '>
+                  '
+                  >
                      Complete the forms of the word
                   </h1>
 
-                  <h2 className='
+                  <h2
+                     className='
                      text-gray-500 
                      text-sm 
                      mb-4 
                      font-light
-                     text-center
-                     md:text-left
-                  '>
+                  '
+                  >
                      {`If the word form doesn't exist, leave the input empty`}
                   </h2>
 
@@ -221,7 +239,7 @@ const Form = () => {
 
                      {wordFormsOk ? (
                         <button
-                           onClick={handleRefresh}
+                           onClick={() => router.refresh()}
                            className='
                                  text-white 
                                  rounded-md 
@@ -249,9 +267,11 @@ const Form = () => {
                            onChange={(ev: any) => setVerb(ev.target.value)}
                            bgColor={verbStateInput}
                         />
-                        {verbResults !== '' && (
+                        {isSubmited && (
                            <div className='text-sm ml-1 -mt-3 text-gray-300'>
-                              {verbResults}
+                              {verbResults !== ''
+                                 ? verbResults
+                                 : `${randomWordOk} do not have verb forms`}
                            </div>
                         )}
 
@@ -263,9 +283,11 @@ const Form = () => {
                            onChange={(ev: any) => setNoun(ev.target.value)}
                            bgColor={nounStateInput}
                         />
-                        {nounResults !== '' && (
+                        {isSubmited && (
                            <div className='text-sm ml-1 -mt-3 text-gray-300'>
-                              {nounResults}
+                              {nounResults !== ''
+                                 ? nounResults
+                                 : `${randomWordOk} do not have noun forms`}
                            </div>
                         )}
 
@@ -277,9 +299,11 @@ const Form = () => {
                            onChange={(ev: any) => setAdjective(ev.target.value)}
                            bgColor={adjectiveStateInput}
                         />
-                        {adjectiveResults !== '' && (
+                        {isSubmited && (
                            <div className='text-sm ml-1 -mt-3 text-gray-300'>
-                              {adjectiveResults}
+                              {adjectiveResults !== ''
+                                 ? adjectiveResults
+                                 : `${randomWordOk} do not have adjective forms`}
                            </div>
                         )}
 
@@ -291,9 +315,11 @@ const Form = () => {
                            onChange={(ev: any) => setAdverb(ev.target.value)}
                            bgColor={adverbStateInput}
                         />
-                        {adverbResults !== '' && (
+                        {isSubmited && (
                            <div className='text-sm ml-1 -mt-3 text-gray-300'>
-                              {adverbResults}
+                              {adverbResults !== ''
+                                 ? adverbResults
+                                 : `${randomWordOk} do not have adverbial forms`}
                            </div>
                         )}
                      </div>
@@ -314,6 +340,38 @@ const Form = () => {
                   >
                      {textButtonSubmit}
                   </button>
+
+                  <div className='flex justify-between mt-6'>
+                     <div>
+                        <p>Correct</p>
+                        <h1
+                           className='
+                              text-gray-300 
+                              text-2xl 
+                              mb-1
+                              font-bold
+                              text-center
+                           '
+                        >
+                           {countOk}
+                        </h1>
+                     </div>
+
+                     <div>
+                        <p>Incorrect</p>
+                        <h1
+                           className='
+                              text-gray-300 
+                              text-2xl 
+                              mb-1
+                              font-bold
+                              text-center
+                           '
+                        >
+                           {countError}
+                        </h1>
+                     </div>
+                  </div>
                </div>
             </div>
          </div>
