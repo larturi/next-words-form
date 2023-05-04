@@ -41,11 +41,8 @@ const Form = () => {
    const [adverbStateInput, setAdverbStateInput] = useState('');
 
    const [textButtonSubmit, setTextButtonSubmit] = useState('Submit');
-
    const [countIntentos, setCountIntentos] = useState(0);
-
    const [inputsOk, setInputsOk] = useState(0);
-
    const [wordFormsOk, setWordFormsOk] = useState<WordForm>();
    const [randomWordOk, setRandomWordOk] = useState('');
 
@@ -90,8 +87,7 @@ const Form = () => {
 
       if (textButtonSubmit === 'Next') {
          setTextButtonSubmit('Submit');
-         resetForm();
-         router.push('/');
+         handleRefresh();
          return;
       }
 
