@@ -50,11 +50,13 @@ const Form = () => {
 
    const [countOk, setCountOk] = useState(0);
    const [countError, setCountError] = useState(0);
+   const [errorService, setErrorService] = useState(false);
 
    async function fetchData() {
-      const { randomWord, wordForms } = await getWordFamily();
+      const { randomWord, wordForms, errorExists } = await getWordFamily();
       setRandomWordOk(randomWord);
       setWordFormsOk(wordForms);
+      setErrorService(errorExists);
    }
 
    useEffect(() => {
@@ -66,10 +68,10 @@ const Form = () => {
          setTextButtonSubmit('Next');
 
          const hasError =
-         verbStateInput === 'red' ||
-         nounStateInput === 'red' ||
-         adjectiveStateInput === 'red' ||
-         adverbStateInput === 'red';
+            verbStateInput === 'red' ||
+            nounStateInput === 'red' ||
+            adjectiveStateInput === 'red' ||
+            adverbStateInput === 'red';
 
          if (hasError) {
             setCountError(countError + 1);
@@ -159,7 +161,9 @@ const Form = () => {
       wordFormsOk: WordForm
    ): void => {
       if (wordFormsOk?.word_forms[wordType].length > 0) {
-         if (wordFormsOk.word_forms[wordType].includes(word.toLowerCase().trim())) {
+         if (
+            wordFormsOk.word_forms[wordType].includes(word.toLowerCase().trim())
+         ) {
             setWordStateInput('green');
          } else {
             setWordStateInput('red');
@@ -214,7 +218,8 @@ const Form = () => {
                   <h1
                      className='
                      text-white
-                     text-2xl 
+                     text-xl 
+                     md:text-2xl 
                      mb-1 
                      font-light 
                   '
@@ -233,11 +238,22 @@ const Form = () => {
                      {`If the word form doesn't exist, leave the input empty`}
                   </h2>
 
-                  <hr className='h-px mb-6 bg-gray-500 border-0' />
+                  <hr className='h-px mb-6 bg-gray-500 border-0 w-11/12' />
 
                   <div className='flex justify-between'>
                      <h2 className='text-white text-4xl mb-8 font-semibold'>
-                        {wordFormsOk ? randomWordOk : '...'}
+                        {wordFormsOk && !errorService ? (
+                           randomWordOk
+                        ) : errorService ? (
+                           <>
+                              <p className='text-red-400 text-sm lg:pr-20'>
+                                 We are experiencing issues with our word
+                                 service. Please try again later.
+                              </p>
+                           </>
+                        ) : (
+                           '...'
+                        )}
                      </h2>
 
                      {wordFormsOk ? (

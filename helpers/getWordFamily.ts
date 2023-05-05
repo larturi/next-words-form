@@ -13,15 +13,18 @@ export default async function getWordFamily() {
    };
 
    let randomWord = '';
+   let errorExists = false;
 
    // The random word must to have at least two non-empty arrays
-   while (countNonEmpty < WORD_FAMILY_NON_EMPTY_ARRAYS) {
+   while (countNonEmpty < WORD_FAMILY_NON_EMPTY_ARRAYS && !errorExists) {
       randomWord = getRandomWord();
 
       try {
          const response = await fetch(
             `${URL_SERVICE_WORD_FAMILY}/random_word_family/${randomWord}`
          );
+
+         console.log(response.status);
 
          wordForms = await response.json();
 
@@ -40,9 +43,10 @@ export default async function getWordFamily() {
       } catch (error) {
          randomWord = '...';
          countNonEmpty = 0;
-         console.log('error');
+         errorExists = true;
+         console.log(error);
       }
    }
 
-   return { wordForms, randomWord };
+   return { wordForms, randomWord, errorExists };
 }
