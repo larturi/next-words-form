@@ -159,7 +159,7 @@ const Form = () => {
       wordFormsOk: WordForm
    ): void => {
       if (wordFormsOk?.word_forms[wordType].length > 0) {
-         if (wordFormsOk.word_forms[wordType].includes(word.toLowerCase())) {
+         if (wordFormsOk.word_forms[wordType].includes(word.toLowerCase().trim())) {
             setWordStateInput('green');
          } else {
             setWordStateInput('red');
