@@ -6,6 +6,7 @@ import { AiOutlineReload } from 'react-icons/ai';
 import Input from './Input';
 import getWordFamily from '../helpers/getWordFamily';
 import LoaderForm from './LoaderForm';
+import Results from './Results';
 
 export interface WordForm {
    word: string;
@@ -212,7 +213,7 @@ const Form = () => {
                >
                   <h1
                      className='
-                     text-gray-300 
+                     text-white
                      text-2xl 
                      mb-1 
                      font-light 
@@ -341,37 +342,7 @@ const Form = () => {
                      {textButtonSubmit}
                   </button>
 
-                  <div className='flex justify-between mt-6'>
-                     <div>
-                        <p>Correct</p>
-                        <h1
-                           className='
-                              text-gray-300 
-                              text-2xl 
-                              mb-1
-                              font-bold
-                              text-center
-                           '
-                        >
-                           {countOk}
-                        </h1>
-                     </div>
-
-                     <div>
-                        <p>Incorrect</p>
-                        <h1
-                           className='
-                              text-gray-300 
-                              text-2xl 
-                              mb-1
-                              font-bold
-                              text-center
-                           '
-                        >
-                           {countError}
-                        </h1>
-                     </div>
-                  </div>
+                  <Results countOk={countOk} countError={countError} />
                </div>
             </div>
          </div>
