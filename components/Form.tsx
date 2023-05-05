@@ -201,9 +201,9 @@ const Form = () => {
                   bg-black 
                     bg-opacity-70 
                     px-6
-                    py-8
+                    py-5
                     lg:px-12
-                    lg:py-12
+                    lg:py-8
                     self-center 
                     mt-2 
                     lg:w-2/5
@@ -232,6 +232,8 @@ const Form = () => {
                   >
                      {`If the word form doesn't exist, leave the input empty`}
                   </h2>
+
+                  <hr className='h-px mb-6 bg-gray-500 border-0' />
 
                   <div className='flex justify-between'>
                      <h2 className='text-white text-4xl mb-8 font-semibold'>

@@ -1,9 +1,9 @@
-import getRandomWord from '../actions/getRandomWord';
 import { WordForm } from '../components/Form';
 import { 
    URL_SERVICE_WORD_FAMILY, 
    WORD_FAMILY_NON_EMPTY_ARRAYS 
 } from '../constants/constants';
+import getRandomWord from './getRandomWord';
 
 export default async function getWordFamily() {
    let countNonEmpty = 0;
