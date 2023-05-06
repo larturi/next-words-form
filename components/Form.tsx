@@ -1,26 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AiOutlineReload } from 'react-icons/ai';
 import Input from './Input';
-import getWordFamily from '../helpers/getWordFamily';
 import LoaderForm from './LoaderForm';
 import Results from './Results';
-
-export interface WordForm {
-   word: string;
-   word_forms: WordForms;
-}
-
-export interface WordForms {
-   n: string[];
-   a: string[];
-   v: string[];
-   r: any[];
-}
-
-type WordType = 'v' | 'n' | 'a' | 'r';
+import { useGetWordForm } from '../hooks/useGetWordForms';
+import { WordForm, WordType } from '../types/word-form-types';
 
 const Form = () => {
    const router = useRouter();
@@ -43,8 +32,8 @@ const Form = () => {
 
    const [textButtonSubmit, setTextButtonSubmit] = useState('Submit');
    const [countIntentos, setCountIntentos] = useState(0);
-   const [wordFormsOk, setWordFormsOk] = useState<WordForm>();
-   const [randomWordOk, setRandomWordOk] = useState('');
+   const [wordFormsValue, setWordFormsValue] = useState<WordForm>();
+   const [randomWordValue, setRandomWordValue] = useState('');
 
    const [isSubmited, setIsSubmited] = useState(false);
 
@@ -52,10 +41,12 @@ const Form = () => {
    const [countError, setCountError] = useState(0);
    const [errorService, setErrorService] = useState(false);
 
+   const { getWordForms } = useGetWordForm();
+
    async function fetchData() {
-      const { randomWord, wordForms, errorExists } = await getWordFamily();
-      setRandomWordOk(randomWord);
-      setWordFormsOk(wordForms);
+      const { randomWord, wordForms, errorExists } = await getWordForms();
+      setRandomWordValue(randomWord);
+      setWordFormsValue(wordForms);
       setErrorService(errorExists);
    }
 
@@ -81,7 +72,6 @@ const Form = () => {
       } else {
          setTextButtonSubmit('Submit');
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [isSubmited]);
 
    const handleSubmit = () => {
@@ -97,7 +87,7 @@ const Form = () => {
    };
 
    const handleRefresh = () => {
-      setWordFormsOk(undefined);
+      setWordFormsValue(undefined);
       fetchData();
       resetForm();
    };
@@ -121,34 +111,34 @@ const Form = () => {
    const validationForm = () => {
       setIsSubmited(true);
 
-      if (wordFormsOk) {
+      if (wordFormsValue) {
          validateInput(
             'v',
             verb,
             setVerbStateInput,
             setVerbResults,
-            wordFormsOk
+            wordFormsValue
          );
          validateInput(
             'n',
             noun,
             setNounStateInput,
             setNounResults,
-            wordFormsOk
+            wordFormsValue
          );
          validateInput(
             'a',
             adjective,
             setAdjectiveStateInput,
             setAdjectiveResults,
-            wordFormsOk
+            wordFormsValue
          );
          validateInput(
             'r',
             adverb,
             setAdverbStateInput,
             setAdverbResults,
-            wordFormsOk
+            wordFormsValue
          );
       }
    };
@@ -158,17 +148,17 @@ const Form = () => {
       word: string,
       setWordStateInput: React.Dispatch<React.SetStateAction<string>>,
       setWordResults: React.Dispatch<React.SetStateAction<string>>,
-      wordFormsOk: WordForm
+      wordFormsValue: WordForm
    ): void => {
-      if (wordFormsOk?.word_forms[wordType].length > 0) {
+      if (wordFormsValue?.word_forms[wordType].length > 0) {
          if (
-            wordFormsOk.word_forms[wordType].includes(word.toLowerCase().trim())
+            wordFormsValue.word_forms[wordType].includes(word.toLowerCase().trim())
          ) {
             setWordStateInput('green');
          } else {
             setWordStateInput('red');
          }
-         setWordResults(wordFormsOk.word_forms[wordType].join(', '));
+         setWordResults(wordFormsValue.word_forms[wordType].join(', '));
       } else {
          if (word.trim() === '') {
             setWordStateInput('green');
@@ -242,8 +232,8 @@ const Form = () => {
 
                   <div className='flex justify-between'>
                      <h2 className='text-white text-4xl mb-8 font-semibold'>
-                        {wordFormsOk && !errorService ? (
-                           randomWordOk
+                        {wordFormsValue && !errorService ? (
+                           randomWordValue
                         ) : errorService ? (
                            <>
                               <p className='text-red-400 text-sm lg:pr-20'>
@@ -256,7 +246,7 @@ const Form = () => {
                         )}
                      </h2>
 
-                     {wordFormsOk ? (
+                     {wordFormsValue ? (
                         <button
                            onClick={() => router.refresh()}
                            className='
@@ -290,7 +280,7 @@ const Form = () => {
                            <div className='text-sm ml-1 -mt-3 text-gray-300'>
                               {verbResults !== ''
                                  ? verbResults
-                                 : `${randomWordOk} do not have verb forms`}
+                                 : `${randomWordValue} do not have verb forms`}
                            </div>
                         )}
 
@@ -306,7 +296,7 @@ const Form = () => {
                            <div className='text-sm ml-1 -mt-3 text-gray-300'>
                               {nounResults !== ''
                                  ? nounResults
-                                 : `${randomWordOk} do not have noun forms`}
+                                 : `${randomWordValue} do not have noun forms`}
                            </div>
                         )}
 
@@ -322,7 +312,7 @@ const Form = () => {
                            <div className='text-sm ml-1 -mt-3 text-gray-300'>
                               {adjectiveResults !== ''
                                  ? adjectiveResults
-                                 : `${randomWordOk} do not have adjective forms`}
+                                 : `${randomWordValue} do not have adjective forms`}
                            </div>
                         )}
 
@@ -338,7 +328,7 @@ const Form = () => {
                            <div className='text-sm ml-1 -mt-3 text-gray-300'>
                               {adverbResults !== ''
                                  ? adverbResults
-                                 : `${randomWordOk} do not have adverbial forms`}
+                                 : `${randomWordValue} do not have adverbial forms`}
                            </div>
                         )}
                      </div>
