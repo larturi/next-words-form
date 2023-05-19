@@ -1,4 +1,5 @@
 import randomWords from 'random-words';
+import axios from 'axios';
 import { URL_SERVICE_WORD_FAMILY, WORD_FAMILY_NON_EMPTY_ARRAYS } from '../constants/constants';
 import { WordForm } from '../types/word-form-types';
 
@@ -18,11 +19,11 @@ export function useGetWordForm() {
          randomWord = randomWords(12)[0];
 
          try {
-            const response = await fetch(
+            const response = await axios.get(
                `${URL_SERVICE_WORD_FAMILY}/random_word_family/${randomWord}`
             );
 
-            wordForms = await response.json();
+            wordForms = await response.data;
 
             const countVerbs = wordForms.word_forms.v.length;
             const countNouns = wordForms.word_forms.n.length;

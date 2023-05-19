@@ -9,6 +9,7 @@ import Input from './Input';
 import LoaderForm from './LoaderForm';
 import Results from './Results';
 import { useGetWordForm } from '../hooks/useGetWordForms';
+import { useGetTranslateWord } from '../hooks/useGetTranslateWord';
 import { WordForm, WordType } from '../types/word-form-types';
 
 const Form = () => {
@@ -34,6 +35,7 @@ const Form = () => {
    const [countIntentos, setCountIntentos] = useState(0);
    const [wordFormsValue, setWordFormsValue] = useState<WordForm>();
    const [randomWordValue, setRandomWordValue] = useState('');
+   const [translatedWord, setTranslatedWord] = useState('');
 
    const [isSubmited, setIsSubmited] = useState(false);
 
@@ -42,6 +44,7 @@ const Form = () => {
    const [errorService, setErrorService] = useState(false);
 
    const { getWordForms } = useGetWordForm();
+   const { getTranslateWord } = useGetTranslateWord();
 
    async function fetchData() {
       const { randomWord, wordForms, errorExists } = await getWordForms();
@@ -74,8 +77,11 @@ const Form = () => {
       }
    }, [isSubmited]);
 
-   const handleSubmit = () => {
+   const handleSubmit = async () => {
       setCountIntentos(countIntentos + 1);
+
+      const translate = await getTranslateWord(randomWordValue);
+      setTranslatedWord(translate.translation);
 
       if (textButtonSubmit === 'Next') {
          setTextButtonSubmit('Submit');
@@ -106,6 +112,7 @@ const Form = () => {
       setAdverb('');
       setAdverbResults('');
       setAdverbStateInput('');
+      setTranslatedWord('');
    };
 
    const validationForm = () => {
@@ -231,20 +238,30 @@ const Form = () => {
                   <hr className='h-px mb-6 bg-gray-500 border-0 w-11/12' />
 
                   <div className='flex justify-between'>
-                     <h2 className='text-white text-4xl mb-8 font-semibold'>
-                        {wordFormsValue && !errorService ? (
-                           randomWordValue
-                        ) : errorService ? (
-                           <>
-                              <p className='text-red-400 text-sm lg:pr-20'>
-                                 We are experiencing issues with our word
-                                 service. Please try again later.
-                              </p>
-                           </>
-                        ) : (
-                           '...'
-                        )}
-                     </h2>
+                     <div>
+                        <h2 className='text-white text-4xl font-semibold'>
+                           {wordFormsValue && !errorService ? (
+                              randomWordValue
+                           ) : errorService ? (
+                              <>
+                                 <p className='text-red-400 text-sm lg:pr-20'>
+                                    We are experiencing issues with our word
+                                    service. Please try again later.
+                                 </p>
+                              </>
+                           ) : (
+                              '...'
+                           )}
+                        </h2>
+
+                        <span
+                           className='
+                              text-gray-400 mt-3 italic
+                           '
+                        >
+                           { translatedWord }
+                        </span>
+                     </div>
 
                      {wordFormsValue ? (
                         <button
@@ -267,7 +284,7 @@ const Form = () => {
                   </div>
 
                   <>
-                     <div className='flex flex-col gap-4'>
+                     <div className='flex flex-col gap-4 mt-4'>
                         <Input
                            id='verb'
                            type='text'
