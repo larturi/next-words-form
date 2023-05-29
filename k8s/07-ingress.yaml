@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wordsform-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: wordforms.larturi.local
+      http:
+        paths:
+          - path: /fastapi
+            pathType: Prefix
+            backend:
+              service:
+                name: wordsform-fastapi-service
+                port:
+                  number: 8900
+          - path: /php
+            pathType: Prefix
+            backend:
+              service:
+                name: wordsform-php-translate-service
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wordsform-next-app-service
+                port:
+                  number: 3000

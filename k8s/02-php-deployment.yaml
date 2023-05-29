@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordsform-php-translate-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordsform-php-translate
+  template:
+    metadata:
+      labels:
+        app: wordsform-php-translate
+    spec:
+      containers:
+        - name: wordsform-php-translate
+          image: larturi/wordsform-php-translate:latest
+          ports:
+            - containerPort: 8080
