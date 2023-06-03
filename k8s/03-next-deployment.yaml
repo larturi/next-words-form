@@ -1,19 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wordsform-next-app-deployment
+  name: next-client-app
+  labels:
+    app: wordsform
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: wordsform-next-app
+      name: next-client-app
+      app: wordsform
   template:
     metadata:
+      name: next-client-app
       labels:
-        app: wordsform-next-app
+        name: next-client-app
+        app: wordsform
     spec:
       containers:
-        - name: wordsform-next-app
-          image: larturi/wordsform-next-app:latest
-          ports:
-            - containerPort: 3000
+      - name: next-client-app
+        image: larturi/wordsform-next-app:latest
+        ports:
+        - containerPort: 3000
+          name: next-client-app
+        env:
+        - name: NEXT_PUBLIC_URL_SERVICE_WORD_FAMILY
+          value: "http://localhost:31000"

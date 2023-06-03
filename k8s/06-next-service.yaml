@@ -1,12 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wordsform-next-app-service
+  name: next-client-app
+  labels:
+    name: next-client-app
+    app: wordsform
 spec:
-  selector:
-    app: wordsform-next-app
+  type: NodePort
   ports:
-    - protocol: TCP
-      port: 3000
-      targetPort: 3000
-  type: ClusterIP
+  - port: 80
+    targetPort: 3000
+    nodePort: 32000
+    name: "next-client-app"
+  selector:
+    name: next-client-app
+    app: wordsform
+

@@ -1,19 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wordsform-fastapi-deployment
+  name: fastapi-words
+  labels:
+    app: wordsform
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wordsform-fastapi
+      name: fastapi-words
+      app: wordsform
   template:
     metadata:
+      name: fastapi-words
       labels:
-        app: wordsform-fastapi
+        name: fastapi-words
+        app: wordsform
     spec:
       containers:
-        - name: wordsform-fastapi
-          image: larturi/wordsform-fastapi:latest
-          ports:
-            - containerPort: 8900
+      - name: fastapi-words
+        image: larturi/wordsform-fastapi:latest
+        ports:
+        - containerPort: 8900
+          name: fastapi-words
+
