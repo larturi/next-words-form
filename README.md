@@ -28,7 +28,11 @@ npm run dev
 ### Installation with Helm
 
 ```bash
-helm install wordforms wordforms-helm
+    kubectl create namespace wordsform
+
+    helm install wordforms wordforms-helm
+
+    helm delete wordforms
 ```
 
 ### Access to application and services
