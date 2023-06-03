@@ -17,18 +17,24 @@ npm run dev
     docker run -p 3000:3000 --name wordsform-next-app larturi/wordsform-next-app  
 ```
 
+### Installation with kubectl
+
 ```bash
     kubectl create namespace wordsform
     kubectl apply -f . --namespace wordsform
     kubectl get all --namespace wordsform
+```
 
-    # To scale the app
-    kubectl scale deployment next-client-app --replicas=3 --namespace wordsform
+### Installation with Helm
 
-    # To delete all objects
-    kubectl delete all --all --namespace wordsform
+```bash
+helm install wordforms wordforms-helm
+```
 
-    # Next.js Application
+### Access to application and services
+
+```bash
+   # Next.js Application
     http://localhost:32000
 
     # FastApi Service Words
@@ -36,4 +42,14 @@ npm run dev
 
     # Php Service Translate
     http://localhost:31001/?word=love
+```
+
+### To scale the app or uninstall
+
+```bash
+    # To scale the app
+    kubectl scale deployment next-client-app --replicas=3 --namespace wordsform
+
+    # To delete all objects
+    kubectl delete all --all --namespace wordsform
 ```
