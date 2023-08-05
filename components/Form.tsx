@@ -4,6 +4,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { IVariant } from '@unleash/nextjs';
+import ReactGA from 'react-ga';
+
 import { AiOutlineReload } from 'react-icons/ai';
 import Input from './Input';
 import LoaderForm from './LoaderForm';
@@ -12,7 +15,6 @@ import { useGetWordForm } from '../hooks/useGetWordForms';
 import { useGetTranslateWord } from '../hooks/useGetTranslateWord';
 import { WordForm, WordType } from '../types/word-form-types';
 import Button from './Button';
-import { IVariant } from '@unleash/nextjs';
 
 interface FormProps {
    isEnabled: boolean
@@ -87,6 +89,13 @@ const Form: React.FC<FormProps> = ({ isEnabled, variant }) => {
 
    const handleSubmit = async () => {
       setCountIntentos(countIntentos + 1);
+
+      // Analytics Color Button - Test AB Unleash
+      ReactGA.event({
+         category: 'Boton', 
+         action: 'Click',
+         label: variant?.name === 'BotonRojo' ? 'boton-purple' : 'boton-blue',
+      });
 
       const translate = await getTranslateWord(randomWordValue);
       setTranslatedWord(translate.translation);

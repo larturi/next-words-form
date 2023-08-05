@@ -1,5 +1,5 @@
-import { IVariant } from '@unleash/nextjs';
 import React from 'react';
+import { IVariant } from '@unleash/nextjs';
 
 interface ButtonProps {
    handleSubmit: () => Promise<void>;
