@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/next-script-for-ga */
 import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Form from '../components/Form';
@@ -19,6 +20,19 @@ const IndexPage: NextPage<Data> = ({ isEnabled, variant }) => {
       <>
          <Head>
             <title>Word Forms Practice!</title>
+
+            {/* Google Analytics Measurement ID*/}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTTRFS4PJG"></script>
+            <script
+               dangerouslySetInnerHTML={{
+               __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'G-HTTRFS4PJG');
+               `,
+               }}
+            />
          </Head>
 
          <Form 
