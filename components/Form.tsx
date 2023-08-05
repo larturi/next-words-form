@@ -11,6 +11,7 @@ import Results from './Results';
 import { useGetWordForm } from '../hooks/useGetWordForms';
 import { useGetTranslateWord } from '../hooks/useGetTranslateWord';
 import { WordForm, WordType } from '../types/word-form-types';
+import Button from './Button';
 
 const Form = () => {
    const router = useRouter();
@@ -351,21 +352,11 @@ const Form = () => {
                      </div>
                   </>
 
-                  <button
-                     onClick={handleSubmit}
-                     className='
-                    bg-blue-600 
-                      py-3 
-                      text-white 
-                      rounded-md 
-                      w-full 
-                      mt-6
-                    hover:bg-blue-700 
-                      transition
-                   '
-                  >
-                     {textButtonSubmit}
-                  </button>
+                  <Button 
+                     textButtonSubmit={textButtonSubmit} 
+                     handleSubmit={handleSubmit}
+                     variant='Variante'
+                  />
 
                   <Results countOk={countOk} countError={countError} />
                </div>
