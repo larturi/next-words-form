@@ -13,8 +13,13 @@ import { useGetTranslateWord } from '../hooks/useGetTranslateWord';
 import { WordForm, WordType } from '../types/word-form-types';
 import Button from './Button';
 
+import { useVariant } from '@unleash/nextjs/client';
+
 const Form = () => {
+
    const router = useRouter();
+
+   const [isReady, setIsReady] = useState(false);
 
    const [verb, setVerb] = useState('');
    const [verbResults, setVerbResults] = useState('');
@@ -57,6 +62,9 @@ const Form = () => {
    useEffect(() => {
       fetchData();
    }, []);
+
+   // Unleash
+   const variant = useVariant('prueba2');
 
    useEffect(() => {
       if (isSubmited) {
@@ -355,7 +363,7 @@ const Form = () => {
                   <Button 
                      textButtonSubmit={textButtonSubmit} 
                      handleSubmit={handleSubmit}
-                     variant='Variante'
+                     variantIsEnabled={variant.enabled}
                   />
 
                   <Results countOk={countOk} countError={countError} />

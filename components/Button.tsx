@@ -3,36 +3,29 @@ import React from 'react';
 interface ButtonProps {
    handleSubmit: () => Promise<void>;
    textButtonSubmit: string;
-   variant?: 'Original' | 'Variante';
+   variantIsEnabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ 
-    handleSubmit, 
-    textButtonSubmit,
-    variant
+const Button: React.FC<ButtonProps> = ({
+   handleSubmit,
+   textButtonSubmit,
+   variantIsEnabled,
 }) => {
+   const getButtonStyle = () => {
+      if (!variantIsEnabled) {
+         return 'py-3 rounded-md w-full mt-6 transition text-white bg-blue-600 hover:bg-blue-700';
+      } else {
+         return 'py-3 rounded-md w-full mt-6 transition text-white bg-purple-600 hover:bg-purple-700';
+      }
+   };
 
-    const getButtonStyle = () => {
-        switch (variant) {
-            case 'Original':
-                return 'py-3 rounded-md w-full mt-6 transition text-white bg-blue-600 hover:bg-blue-700';
-            case 'Variante':
-                return 'py-3 rounded-md w-full mt-6 transition text-white bg-purple-600 hover:bg-purple-700';
-            default:
-                return 'py-3 rounded-md w-full mt-6 transition text-white bg-blue-600 hover:bg-blue-700';
-        }
-    };
+   const buttonStyle = getButtonStyle();
 
-    const buttonStyle = getButtonStyle();
-
-    return (
-      <button
-         onClick={handleSubmit}
-         className={buttonStyle}
-      >
+   return (
+      <button onClick={handleSubmit} className={buttonStyle}>
          {textButtonSubmit}
       </button>
-    );
+   );
 };
 
 export default Button;
