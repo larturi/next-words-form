@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/next-script-for-ga */
 import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-import Form from '../components/Form';
+import ReactGA from 'react-ga';
 import {
    flagsClient,
    getDefinitions,
@@ -9,6 +9,8 @@ import {
    getFrontendFlags,
    type IVariant,
  } from '@unleash/nextjs';
+
+ import Form from '../components/Form';
  
  type Data = {
    isEnabled: boolean;
@@ -16,23 +18,13 @@ import {
  };
 
 const IndexPage: NextPage<Data> = ({ isEnabled, variant }) => {
+
+   ReactGA.initialize('G-HTTRFS4PJG');
+
    return (
       <>
          <Head>
             <title>Word Forms Practice!</title>
-
-            {/* Google Analytics Measurement ID*/}
-            <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTTRFS4PJG"></script>
-            <script
-               dangerouslySetInnerHTML={{
-               __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', 'G-HTTRFS4PJG');
-               `,
-               }}
-            />
          </Head>
 
          <Form 
