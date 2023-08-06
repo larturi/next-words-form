@@ -81,6 +81,11 @@ const Form: React.FC<FormProps> = ({ isEnabled, variant }) => {
             setCountError(countError + 1);
          } else {
             setCountOk(countOk + 1);
+            ReactGA.event({
+               category: 'Social',
+               action: 'Win',
+               value: 1
+            });
          }
       } else {
          setTextButtonSubmit('Submit');
