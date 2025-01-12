@@ -59,3 +59,4 @@ npm run dev
     # To delete all objects
     kubectl delete all --all --namespace wordsform
 ```
+
